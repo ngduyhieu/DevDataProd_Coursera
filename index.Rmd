@@ -1,0 +1,130 @@
+---
+title       : Solving the Quadratic Equation
+subtitle    : Simple yet Involved
+author      : Hieu Duy Nguyen (Hill)
+job         : Scientist
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : [mathjax]            # {mathjax, quiz, bootstrap}
+ext_widgets : {rCharts: [libraries/nvd3]}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## Quadratic Equation: $~~ ax^2 + bx + c = 0$
+
+<ol>
+<li> Long time no see you high school textbook? </li>
+<li> Is the equation that easy to solve? 
+    <ul>
+        <li>   How many scenarios can we encounter?  </li>
+        <li>   How many solutions for each case?  </li>
+    </ul>
+</li>
+<li> Fear not! The shiny app <font color="red" size="6"> SolQuadEq </font> is here to save the day!  </li>
+<li> Features in this app:
+    <ul>
+        <li>   Robustness: covering all possible scenarios  </li>
+        <li>   Accuracy: exact solution(s) (if existing)  </li>
+        <li>   <font color="gray" size="4"> ... at least when you expect solutions to be real numbers only</font>  </li>
+    </ul>
+</li>
+</ol>
+
+--- .class #id 
+
+## And now the familiar (but long forgotten) flowchart
+
+Courtesy to: https://conceptdraw.com/a232c3/preview
+
+<center> <img src="solQuadEqAlgo.png" alt="QuadEqAlgo" height="500" width="600"> </center>
+
+--- .class #id
+
+## Example: Generate a, b, c, and print the result(s)
+
+The app link is here: https://ngduyhieu.shinyapps.io/solvingQuadEq
+
+```{r}
+set.seed(1234)
+df <- data.frame(a = rnorm(1,0,1), b = rnorm(1,0,1), c = rnorm(1,0,1))
+df
+```
+
+You want to solve the equation <font color="red"> [`r round(df$a,3)`] $x^2 +$ [`r round(df$b,3)`] $x +$ [`r round(df$c,3)`] $= 0$ </font>.
+
+The hidden code can be found here: https://github.com/ngduyhieu/DevDataProd_Coursera
+
+```{r echo = FALSE}
+solFunc <- function(a,b,c){
+    solFunc  <- as.numeric(c(99,0,0))
+    if (a==0) {
+        if (b==0) {
+            if (c==0) {
+                solFunc[1] <- 99 #The equation has infinite solutions
+            } else{
+                solFunc[1] <- 0 # The equation has no solution
+            }
+            
+        } else{
+            solFunc[1] <- 1 # The equation has one solution
+        }
+    } else{
+        d <- b^2 - 4*a*c
+        if (d<0){
+            solFunc [1] <- 0 # The equation has no solution
+        } else{
+            if (d==0){
+                solFunc[1] <- 1 # The equation has 1 solution
+                solFunc[2] <- -b/(2*a)
+            } else{
+                solFunc[1] <- 2 # The equation has 1 solution
+                solFunc[2] <- (-b-sqrt(d))/(2*a)
+                solFunc[3] <- (-b+sqrt(d))/(2*a)
+            }
+        }
+    }
+    
+    return(solFunc)
+}
+
+tmp <- solFunc(df$a, df$b, df$c)
+
+if (tmp[1] ==0){
+                print("The equation does not have real solution")
+            }
+            
+            if (tmp[1] ==1){
+                print("The equation has 1 real solution")
+
+            }
+            
+            if (tmp[1] ==2){
+                print("The equation has 2 real solutions")
+            }
+            
+            if (tmp[1] ==99){
+                print("Any number is a solution. 
+                    The equation has infinite many real solutions")
+            }
+
+if (tmp[1] ==1){
+                print("The solution is: ", round(tmp[2],3))
+                
+            }
+            
+            if (tmp[1] ==2){
+                tmpPrint <- paste("The solutions are: ", round(tmp[2],4), "and ", round(tmp[3],4))
+                print(tmpPrint)
+            }
+```
+
+
+--- .class #id 
+<div align="center"; style="margin:200px 0 0 0;">
+<font color="red"; size="13"> Thank you </font>
+</br> </br>
+<font color="blue"> Please support my world-changing :) app </font>
+</div>
+
